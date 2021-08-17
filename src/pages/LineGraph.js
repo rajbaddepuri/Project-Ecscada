@@ -81,6 +81,7 @@ export default class LineGraph extends Component {
                           } )
                             
 })
+console.log("Hi my first commit")
 /* .then(function(chart) {
     for (var i = 0; i < chart.length; i++) {
         dataPoints.push({
