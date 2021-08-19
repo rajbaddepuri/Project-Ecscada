@@ -40,6 +40,7 @@ export default class ViewAlarms extends Component {
 
                 });
             }, 10000);
+            
             //set interval time is in milie seconds 10000 = 10 s
         } catch (e) {
             // console.log(e);

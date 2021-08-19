@@ -18,6 +18,7 @@ export class HistoricEvents extends Component {
 
         this.state = {
             historicEvents: [],
+            
             startDate: null,  
             EndDate:null,
             selectedFile: null,
