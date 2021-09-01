@@ -165,6 +165,7 @@ export default class ViewEvents extends Component {
             </div>
              */}
 
+
                         
                         <div class="row">
                         <div className="col-md-3 col-sm-12" style={{}}>  
@@ -174,10 +175,6 @@ export default class ViewEvents extends Component {
                         <span className="input-icon-addon"><i className="fe fe-search"></i></span>
         
                        </div>
-                       
-                       
-                       
-                       
                         </div>
                         
              
