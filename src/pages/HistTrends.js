@@ -62,13 +62,16 @@ export default class AreaTrends extends Component{
             singlePoint :10,
             graphWidth:10,
             currentGroup:"",
-          
-            startDate:new Date(),
-            endDate:new Date(),
+          ///.................start date and end date should be null(02-09-2021)...............////
+            startDate:null,
+            endDate:null,
             pan :false,
             zoom:true,
             Mtime:[],
-          
+            Mvalue:[],
+            GroupnameError:"",
+            startdateError:"",
+            EnddateError:"",          
      
         };
         
@@ -76,16 +79,28 @@ export default class AreaTrends extends Component{
          currentDateTime: new Date(); */
 } 
 onHoverMethod(event, array) {
+
+  var temp = [];
   var item = this.myChart.getElementAtEvent(event);
-  console.log(item);
+ // console.log(item);
   if (item.length){
     //console.log("mouse on");
     console.log(this.myChart.data.labels[item[0]._index], this.myChart.data.datasets[0].data[item[0]._index])
     this.setState({
-        Mtime : this.myChart.data.labels[item[0]._index]
+        Mtime : this.myChart.data.labels[item[0]._index],
+        Mvalue:this.myChart.data.datasets[0].data[item[0]._index]
        })
       console.log(this.state.Mtime)
-    console.log(item[0]._index,this.myChart.data);
+
+      this.myChart.data.datasets.forEach((datasets,i) => {
+     const  Mvalue=this.myChart.data.datasets[i].data[item[0]._index];
+     temp.push(Mvalue)
+    })
+
+    this.setState({
+      Mvalue:temp
+    })
+    console.log(temp)
   }
 }
 
@@ -94,10 +109,21 @@ onHoverMethod(event, array) {
 
 
 componentDidMount() {
-    axios.get('http://localhost/ScadaClient/api/GroupswithTrends?GroupName=').then(res => {
+    axios.get('http://localhost/ScadaClient/api/GroupName?GroupName=').then(res => {
         console.log(res);
-        this.setState({ name: res.data });
-        
+        //this.setState({ name: res.data });
+        this.setState({ name: res.data },()=>{
+          console.log(this.state.name)         
+          //For Default Pupose      
+         {
+        //    if(this.state.currentGroup == "")
+        //    {         
+        //     this.setState({
+        //     currentGroup :this.state.name[0]['CURTRENDTITLE']
+        //    })
+        //  }
+       }     
+      });
     });
 
     this.graph = [];
@@ -117,7 +143,7 @@ options: {
   responsive:true,
   hover:{
     mode:'index',
-    intersect:false,
+    intersect:true,
   },
   onHover: this.onHoverMethod.bind(this),
   // maintainAspectRatio :false,
@@ -133,16 +159,6 @@ options: {
           minute: "YYY-MM HH:mm"
         }
       }
-    //   crosshair:{
-    //     enabled: true,
-    //     snapToDataPoint: true,
-    // },
-    // interval: 12,
-    // intervalType: "time",
-    //   time :{
-    //  // unit:"second"
-    //   }
-     
     }],
     yAxes: [
       {
@@ -168,7 +184,7 @@ options: {
   pan: {
     enabled: false,
     drag: true,
-    mode: "x",
+    mode: "xy",
    //  speed: 10,
    // threshold: 10
   },
@@ -176,7 +192,7 @@ options: {
   zoom: {
     enabled: true,
     drag: true,
-    mode: "x",
+    mode: "xy",
     limits: {
       // max: 10,
       //  min: 0.5
@@ -215,24 +231,16 @@ options: {
 //          data : []
 //      },
 //    ],
-//  },
-  
-   
+//  }, 
 });
-
 }
-
-
-
 //Curretn Group DropDown OnClick-----------------
 handleSelectedGroupDropDOwn = (e) =>
 {
 console.log("DropdoWNclicked");
 var  value = e.target.value ;
 console.log(value);
-
 console.log("Calling Groups API")
-
 this.setState({currentGroup:value},async()=>{
 
   var api = 'http://localhost/ScadaClient/api/GroupwithTrendsTimestamp?GroupName='+this.state.currentGroup;
@@ -290,23 +298,121 @@ this.setState({currentGroup:value},async()=>{
    
     // this.mainTimer = setInterval(() => this.trendsTagsaPI(),this.state.timeInterval);
    // this.trendsTagsaPI();
-//   })
+//   })c
 
 // } 
 // }
-Historic = async () => {
+
+
+///.....................this  for handle validation (02-09-2021)..........//////////
+
+
+handleVAlidations() {
+  let validGropuname = false;
+  let validStartdate = false;
+  let validEnddate = false;
+  let validDate =  false;
+  let validDateRange=false;
+
+  ///..... group name.....///
+  if (this.state.currentGroup ==""){
+    console.log("........entred........")
+    validGropuname=true
+  }
+///.......start date...///
+console.log(this.state.startDate)
+if (this.state.startDate == null ){
+  console.log("........entred........")
+  validStartdate = true
+}
+///.......start date...///
+if (this.state.endDate == null ){
+  console.log("........entred........")
+  validEnddate = true
+
+}
+if (this.state.startDate > this.state.endDate ){
+  validDate = true
+}
+
+if (this.state.startDate && this.state.endDate !== null ){
+  console.log("enterd")
+   // To set two dates to two variables
+   var date1 = new Date(this.state.startDate);
+   var date2 = new Date(this.state.endDate);
+     
+   // To calculate the time difference of two dates
+   var Difference_In_Time = date2.getTime() - date1.getTime();
+     
+   // To calculate the no. of days between two dates
+   var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+   console.log( Difference_In_Days)
+   if (Difference_In_Days >= 91){
+     validDateRange= true
+   }
+}
+return { validGropuname, validStartdate, validEnddate, validDate ,validDateRange};
+}
+
+
+
+Historic = e => {
+
+  e.preventDefault()
+  
+   
+
+  var { validGropuname, validStartdate, validEnddate ,validDate ,validDateRange} = this.handleVAlidations();
+  if (validGropuname ) {
+    //alert("Please Select Group Name")
+    this.setState({
+
+      GroupnameError: " * Please Select Group Name"
+  }, () => {
+        console.log(this.state.GroupnameError)
+  })
+}
+if (validStartdate ) {
+// alert("Please Select The Start Date")
+  this.setState({
+
+    startdateError: " * Please Select The Start Date"
+}, () => {
+  console.log(this.state.startdateError)
+
+})
+}
+  
+if (validEnddate ) {
+  //alert("Please Select The End Date")
+  this.setState({
+    EnddateError: " * Please Select The End Date"
+}, () => {
+  console.log(this.state.EnddateError)
+})
+}
+if (validDate){
+  alert("The start date should not be greater than end date")
+}
+if (validDateRange){
+  alert("The start and end date should not be greater than 90 days")
+}
 
   var startdate = Moment(this.state.startDate).format('YYYY-MM-DDThh:mm:ss')
   var enddate = Moment(this.state.endDate).format('YYYY-MM-DDThh:mm:ss')
-
-  var temp =  [];
-  const val = [];
-
-  console.log("??????????????????????????????????????????????????")
-  console.log("Selected Group Tags Length" +this.state.chart.length)
-  console.log(this.state.chart)
+ // console.log(startdate,enddate,this.state.currentGroup)
 
 
+  
+//alert("ok")
+  //console.log("??????????????????????????????????????????????????")
+  //console.log("Selected Group Tags Length" +this.state.chart.length)
+  //console.log(this.state.chart)
+  if (!validGropuname && !validStartdate && !validEnddate && !validDate && !validDateRange) {
+    alert("ok")
+  
+    var temp =  [];
+    const val = [];
   let i=0;
   let urllist=[]
   
@@ -314,9 +420,13 @@ Historic = async () => {
    // http://localhost/ScadaClient/api/HistoricTrendsData?PointName=TI_1203&FromDate=2021-03-09T14:26:30&ToDate=2021-03-09T14:28:30
 
    // var api = "http://localhost/ScadaClient/api/HistoricTrendsData?PointName="+this.state.chart[i].POINTNAME+"&FromDate="+startdate+"&ToDate="+enddate;
-    var api = "http://localhost/ScadaClient/api/HistoricTrendsData?PointName="+this.state.chart[i].POINTNAME+"&FromDate=2021-03-25T12:02:34&ToDate=2021-03-25T15:53:03";
-    console.log(api)
-      const response =  await  axios.get(api)
+   // var api = "http://localhost/ScadaClient/api/FileRead?PointName="+this.state.chart[i].POINTNAME+"&FromDate=2021-03-25T12:12:30&ToDate=2021-03-25T15:12:33";
+    //var api = "http://localhost/ScadaClient/api/FileRead?PointName="+this.state.chart[i].POINTNAME+"&FromDt="+startdate+"&ToDt="+enddate;
+   
+  // var api = "http://localhost/ScadaClient/api/FileRead?PointName=DAS_GRP2&FromDt="+startdate+"&ToDt="+enddate;
+    var api = " http://localhost/ScadaClient/api/HistoricTrendsData?PointName="+this.state.chart[i].POINTNAME+"&FromDate=2021-03-09T14:26:30&ToDate=2021-03-09T14:28:30";
+       console.log(api)
+      const response =  axios.get(api)
       console.log("response----------")
      console.log(response.data)
 
@@ -325,8 +435,9 @@ Historic = async () => {
     }
      this.setState({histS:temp},()=>{
       console.log(temp)
-    // console.log(this.state.histS[0].length)
-      if(this.state.histS[0].length !== undefined)
+      console.log(this.state.histS)
+    // console.log(this.state.histS[0].length)   
+    if(this.state.histS.length !== undefined) 
       {
 
         this.addingDatasets()
@@ -337,6 +448,7 @@ Historic = async () => {
       }
     
      })
+    }
  }
 
 
@@ -349,32 +461,29 @@ var tempDAtasets = [];
 //Labels ----------------------------------------------------------------
 var labelMap =  await this.state.histS[0].map((singlePoint,i)=>{
   var datelabel = Moment(singlePoint.timestamp).format('YYYY-MM-DDTHH:mm:ss')
-  console.log(datelabel)
+ // console.log(datelabel)
   datetimeLabels.push(datelabel)
-    })
+    })  
 
    
     console.log("Labels DAta-------------------------------"+datetimeLabels.length)
 
+console.log(this.myChart.options.scales.yAxes)
 
-
-    this.myChart.options.scales.yAxes = [];
+ // this.myChart.options.scales.yAxes  = [];
 
     this.myChart.update();
+  
+///  this.myChart.update();
+console.log("---------------")
     // this.myChart.options.scales.yAxes[0].gridLines.display= false;                
     // this.myChart.update();              
-    console.log(this.myChart.options.scales.yAxes)
-
-    console.log("Length of Y-Axis :"+this.myChart.options.scales.yAxes.length)
-
- 
-
-
+   // console.log(this.myChart.options.scales.yAxes)
+    //console.log("Length of Y-Axis :"+this.myChart.options.scales.yAxes.length)
   for(var i=0;i<this.state.histS.length;i++)
   {
     console.log(i)
-    fVAluePoints= []  
-    
+    fVAluePoints= []      
   //Fvalue POins ----------------------
   var fvalueMap =  await this.state.histS[i].map((singlePoint,i)=>{
     fVAluePoints.push(singlePoint.fvalue)
@@ -382,22 +491,20 @@ var labelMap =  await this.state.histS[0].map((singlePoint,i)=>{
 
      
         // console.log("Length after slice"+fVAluePoints.length)
-      console.log(this.state.histS[i][0].pointname +"FvalueDatasets DAta-------------------------------"+fVAluePoints.length)
+     // console.log(this.state.histS[i][0].pointname +"FvalueDatasets DAta-------------------------------"+fVAluePoints.length)
 
-       //Converting colors to hexRGB COlor
-
-    
-       var color  = this.state.histS[i][0].PENCOLOR ;
-
-       const [, alpha, ...colorArray] = ('00000000' + color.toString(16)).slice(-8).match(/([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i)
-       var   hexARGBColor =  `#${colorArray.join('')}${alpha}`
-
-       console.log(hexARGBColor)
+       //Converting colors to hexRGB COlor    
+     //  var color  = this.state.histS[i][0].PENCOLOR ;
+     var color = this.state.chart[i].PENCOLOR;
+       const [, alpha, ...colorArray] = ('00000000' + color.toString(16)).slice(-8).match(/([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i);
+      var   hexARGBColor =  `#${colorArray.join('')}${alpha}`
+    // var hexARGBColor = "#000000"
+      
+      //  console.log(hexARGBColor)
 
        
 
       tempDAtasets.push( {
-
       fill:false,         
       label :this.state.histS[i][0].pointname ,
          fillColor :hexARGBColor,
@@ -435,13 +542,13 @@ var labelMap =  await this.state.histS[0].map((singlePoint,i)=>{
  //this.myChart.options.scales.ya
 
  this.myChart.update()
- console.log(this.myChart.options.scales.yAxes[0])
+ //console.log(this.myChart.options.scales.yAxes[0])
  console.log(datetimeLabels)
 this.myChart.options.scales.yAxes[0].display = false;
 this.myChart.update()
 }
 
-   PopupExample = () => alert('No Data Available in betwean  those Dates fro selected Group ..!')
+   //PopupExample = () => alert('No Data Available in betwean  those Dates fro selected Group ..!')
     
 // PopupExample = () => {
 //   confirmAlert({
@@ -542,6 +649,7 @@ ResetGraphhandleClick = (e) => {
 }
 
 replaceModalItem = (e) =>{
+
   this.setState({
     requiredItem: e
   });
@@ -549,6 +657,14 @@ replaceModalItem = (e) =>{
   console.log(e)
 
 }
+
+
+converAndroidColortoRGB(androidColor){
+  
+
+  return "#000000";
+}
+
 
 saveModalDetails(item) {
   console.log(item);
@@ -611,24 +727,35 @@ hiddenOnClick = (e) =>{
   console.log("hidden Selected");
 
   console.log(e);
-  this.myChart.data.datasets[e].hidden  = !this.myChart.data.datasets[e].hidden
+  this.myChart.data.datasets[e].hidden  = !this.myChart.data.datasets[e].hidden;
+  this.myChart.update();
+  this.setState({
+ 
+  });
+  
+}
+/////////....................... this for setting group statically ...........//////////////
+change = (e)=>{
+  const name = e.target.name;
+  const value = e.target.value;
+  console.log(name,value)
+  this.setState({
+    currentGroup:value
+  },()=>{
+    console.log(this.state.currentGroup)
+  })
+  
+
 }
 
 changeHandlerStart = (e) =>{
+
   this.setState({    
     startDate: e   
 }); 
 console.log("startdate")
 console.log(e)
-// console.log(e)
-  // const name=e.target.name;
-  // const value=e.target.value;
-  // console.log(value)
-  // console.log(name)
-  // this.setState({add:{
-  //     ...this.state.add,
-  //     [name]:value
-  // }});  
+ 
 } 
 
 changeHandlerEnd = (e) =>{
@@ -693,8 +820,28 @@ changeHandlerEnd = (e) =>{
 
            <div className="flex">
             <form className="flex-column"> 
+            
+            
+                                <div class="form-group" style={{}}>
+                                   
+                                    <select name="currentGroup" 
+                                        className="form-control"  value={this.state.currentGroup} onChange={this.change}>
+                                    <option value=""></option>
+                                    <option value="DAS_GRP2">DAS_GRP2</option>
+                                    <option value="sample">sample</option>
+
+                                    </select>
+                                    <span style={{ fontWeight: "", color: "red" }}>{this.state.GroupnameError}</span>
+                                </div>
+                            
+            {/* <select name="currentGroup" className="form-control" style={{ width: "56%" }} value={this.state.currentGroup} onChange={this.change}>
+                  <option value=""></option>
+                  <option value="DAS_GRP2">DAS_GRP2</option>
+                  <option value="sample">sample</option>
+
+             </select> */}
         
-               <select className="custom-select" onChange={this.handleSelectedGroupDropDOwn} >
+               {/* <select className="custom-select" onChange={this.handleSelectedGroupDropDOwn} >
               
                 {this.state.name.map(name => (
                   <option key={name} value={name.CURTRENDTITLE} >
@@ -702,7 +849,7 @@ changeHandlerEnd = (e) =>{
                   </option>
                 ))} 
                 
-              </select>
+              </select> */}
               {/* <input
                 className="result_input"
                 type="number"
@@ -715,7 +862,7 @@ changeHandlerEnd = (e) =>{
             </section> 
   
                       </div>
-                                    <div class="dropdown" style={{marginRight:"34px"}}>
+                                    {/* <div class="dropdown" style={{marginRight:"34px"}}>
                                     <button className="custom-select" id="dropbtn">Trends in Area</button>
                                     <div class="dropdown-content">
                                        
@@ -723,7 +870,7 @@ changeHandlerEnd = (e) =>{
                                         <Link to="/BarTrends">Trends in Bar</Link>                                     
                                        
                                     </div>
-                                </div>
+                                </div> */}
 					
 			
                                     {/* <button className="btn btn-sm btn-outline-secondary mr-1" id="one_month">1M</button>
@@ -844,6 +991,9 @@ changeHandlerEnd = (e) =>{
                      <label>
                       Marker Time :   {this.state.Mtime}                   
                      </label>
+                     <br/>
+                     
+                     
                      
                        
                    </div>
@@ -882,17 +1032,23 @@ changeHandlerEnd = (e) =>{
                    </div>  
 <br/>
                    <div class="row">
-                                                    <div className="col-md-3 col-sm-12" style={{marginLeft:"650px"}}>  
+                                                    <div className="col-md-3 col-sm-12" style={{marginLeft:"550px"}}>  
                                                 Start Date:    <DateTimePicker className="form-control" type="datetime-local" name="startdate" style={{marginLeft:"75px", marginTop:"-30px", width:"70%"}}  
-                                                    value={this.state.startDate} placeholderText="Start Date"     
+                                                    value={this.state.startDate} placeholderText="Start Date"     disableClock={true}  maxDate={new Date()} clearAriaLabel="Clear value"
                                                     onChange={this.changeHandlerStart} 
-                                                    />    
-                                                    </div>  
+                                                    />  
+                                                       <span style={{ fontWeight: "", color: "red" }}>{this.state.startdateError}</span> 
+                                                    
+                                                    </div>
+                                                     
                                                     <div className="col-md-3 col-sm-12" style={{marginLeft:"0px"}}>  
                                                 End Date:    <DateTimePicker className="form-control" type="datetime-local" name="enddate" style={{marginLeft:"75px", marginTop:"-30px", width:"70%"}} 
-                                                    value={this.state.endDate} placeholderText="End Date"    
+                                                    value={this.state.endDate} placeholderText="End Date"    disableClock={true} maxDate={new Date()} clearAriaLabel="Clear value"
                                                     onChange={this.changeHandlerEnd} 
-                                                    />    
+                                                    /> 
+                                                    <span style={{ fontWeight: "", color: "red" }}>{this.state.EnddateError}</span>
+                                                       
+                                                    
                                                     </div>
                                                     <button className="btn btn-primary" style={{marginTop:"25px", color:"white", height:"35px", backgroundColor:"rgb(51, 122, 183)"}} onClick={this.Historic}>Submit</button>
 
@@ -984,7 +1140,7 @@ changeHandlerEnd = (e) =>{
                                        <td style={{textAlign:"-webkit-center", marginLeft:"0",color:this.draw[i]== null ? this.graph[i]:this.draw[i]}}>  <label  key={chart}>{chart.POINTNAME}</label> </td>
                                        <td style={{textAlign:"-webkit-center", marginLeft:"0",color:this.draw[i]== null ? this.graph[i]:this.draw[i]}}>  <label  key={chart}> { this.state.ULarray[i] == null ? chart.UPPERVALUE :this.state.ULarray[i]?.UPPERVALUE}</label> </td>
                                        <td style={{textAlign:"-webkit-center", marginLeft:"0",color:this.draw[i]== null ? this.graph[i]:this.draw[i]}}>  <label  key={chart}>{ this.state.ULarray[i] == null ? chart.LOWERVALUE :this.state.ULarray[i]?.LOWERVALUE}</label> </td> 
-                                       <td style={{textAlign:"-webkit-center", marginLeft:"0",color:this.draw[i]== null ? this.graph[i]:this.draw[i]}}>  <label  key={chart}>
+                                       <td style={{textAlign:"-webkit-center", marginLeft:"0",color:this.draw[i]== null ? this.graph[i]:this.draw[i]}}>  <label  key={chart}>{this.state.Mvalue[i] ?? ""}
                                        {/* //  {chart.fvalue} */}
                                          </label>  </td>
                                        <td style={{textAlign:"-webkit-center", marginLeft:"0",color:this.draw[i]== null ? this.graph[i]:this.draw[i]}}>  <label  key={chart}>{chart.PENCOLOR}</label> </td>
@@ -1047,7 +1203,8 @@ changeHandlerEnd = (e) =>{
                                         UPPERVALUE= "0"
                                         LOWERVALUE= "0"
                                         color="0"
-                                        POINTNAME = {this.myChart?.data.datasets[this.state.requiredItem]?.label}
+                                      COLOR = {this.converAndroidColortoRGB("color")}
+                                        POINTNAME = {this.state?.chart[this.state.requiredItem]?.POINTNAME}
                                         saveModalDetails={this.saveModalDetails}
                                 />
       
