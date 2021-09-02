@@ -114,7 +114,7 @@ componentDidMount() {
         //this.setState({ name: res.data });
         this.setState({ name: res.data },()=>{
           console.log(this.state.name)         
-          //For Default Pupose      
+          //............For Default  group name Pupose...........//////    
          {
         //    if(this.state.currentGroup == "")
         //    {         
@@ -325,16 +325,18 @@ if (this.state.startDate == null ){
   console.log("........entred........")
   validStartdate = true
 }
-///.......start date...///
+///.......end date...///
 if (this.state.endDate == null ){
   console.log("........entred........")
   validEnddate = true
 
 }
+//........end date should be less than start date.........////
 if (this.state.startDate > this.state.endDate ){
   validDate = true
 }
 
+///........ the diffarance beteween the end date and startdate should be Les than 90 days......./////
 if (this.state.startDate && this.state.endDate !== null ){
   console.log("enterd")
    // To set two dates to two variables
@@ -356,12 +358,12 @@ return { validGropuname, validStartdate, validEnddate, validDate ,validDateRange
 
 
 
-Historic = e => {
+Historic = async () => {
 
-  e.preventDefault()
+  
   
    
-
+///.............CALLING METHOD VALIDATION.....................///////////////////
   var { validGropuname, validStartdate, validEnddate ,validDate ,validDateRange} = this.handleVAlidations();
   if (validGropuname ) {
     //alert("Please Select Group Name")
@@ -408,6 +410,9 @@ if (validDateRange){
   //console.log("??????????????????????????????????????????????????")
   //console.log("Selected Group Tags Length" +this.state.chart.length)
   //console.log(this.state.chart)
+
+/////'..............ADDING THE CONDITION.........///////////////////
+
   if (!validGropuname && !validStartdate && !validEnddate && !validDate && !validDateRange) {
     alert("ok")
   
@@ -426,7 +431,7 @@ if (validDateRange){
   // var api = "http://localhost/ScadaClient/api/FileRead?PointName=DAS_GRP2&FromDt="+startdate+"&ToDt="+enddate;
     var api = " http://localhost/ScadaClient/api/HistoricTrendsData?PointName="+this.state.chart[i].POINTNAME+"&FromDate=2021-03-09T14:26:30&ToDate=2021-03-09T14:28:30";
        console.log(api)
-      const response =  axios.get(api)
+      const response =  await axios.get(api)
       console.log("response----------")
      console.log(response.data)
 
@@ -823,7 +828,7 @@ changeHandlerEnd = (e) =>{
             
             
                                 <div class="form-group" style={{}}>
-                                   
+                                   {/*  THIS FOR STATIC GROUP NAME BINDING BECAUSE API'S ARE NOT WORKING */}
                                     <select name="currentGroup" 
                                         className="form-control"  value={this.state.currentGroup} onChange={this.change}>
                                     <option value=""></option>
@@ -831,6 +836,7 @@ changeHandlerEnd = (e) =>{
                                     <option value="sample">sample</option>
 
                                     </select>
+                                    {/* ...........FOR SHOWING THE ERROR...... */}
                                     <span style={{ fontWeight: "", color: "red" }}>{this.state.GroupnameError}</span>
                                 </div>
                             
@@ -1032,20 +1038,23 @@ changeHandlerEnd = (e) =>{
                    </div>  
 <br/>
                    <div class="row">
+                     {/*  ..................................DISABLED CLOCK AND ADDED MAX DATE ........................ */}
                                                     <div className="col-md-3 col-sm-12" style={{marginLeft:"550px"}}>  
                                                 Start Date:    <DateTimePicker className="form-control" type="datetime-local" name="startdate" style={{marginLeft:"75px", marginTop:"-30px", width:"70%"}}  
                                                     value={this.state.startDate} placeholderText="Start Date"     disableClock={true}  maxDate={new Date()} clearAriaLabel="Clear value"
                                                     onChange={this.changeHandlerStart} 
                                                     />  
+                         {/*...............................FOR SHOWING THE ERROR................................ */}
                                                        <span style={{ fontWeight: "", color: "red" }}>{this.state.startdateError}</span> 
                                                     
                                                     </div>
-                                                     
+                            {/*  ..................................DISABLED CLOCK AND ADDED MAX DATE ........................ */}
                                                     <div className="col-md-3 col-sm-12" style={{marginLeft:"0px"}}>  
                                                 End Date:    <DateTimePicker className="form-control" type="datetime-local" name="enddate" style={{marginLeft:"75px", marginTop:"-30px", width:"70%"}} 
                                                     value={this.state.endDate} placeholderText="End Date"    disableClock={true} maxDate={new Date()} clearAriaLabel="Clear value"
                                                     onChange={this.changeHandlerEnd} 
                                                     /> 
+                                  {/*...............................FOR SHOWING THE ERROR................................ */}                   
                                                     <span style={{ fontWeight: "", color: "red" }}>{this.state.EnddateError}</span>
                                                        
                                                     
