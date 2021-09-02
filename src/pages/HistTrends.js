@@ -1211,7 +1211,7 @@ changeHandlerEnd = (e) =>{
                                 <Modal 
                                         UPPERVALUE= "0"
                                         LOWERVALUE= "0"
-                                        color="0"
+                                        color={this.state?.chart[this.state.requiredItem]?.color}
                                       COLOR = {this.converAndroidColortoRGB("color")}
                                         POINTNAME = {this.state?.chart[this.state.requiredItem]?.POINTNAME}
                                         saveModalDetails={this.saveModalDetails}

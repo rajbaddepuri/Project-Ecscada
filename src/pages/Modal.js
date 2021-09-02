@@ -13,12 +13,7 @@ Modal extends Component {
             UPPERVALUE: '',
             LOWERVALUE: '',
             displayColorPicker: true,
-            color: {
-            r: '241',
-            g: '112',
-            b: '19',
-            a: '1',
-            },
+           color:'',
         }
     }
 
