@@ -13,16 +13,44 @@ Modal extends Component {
             UPPERVALUE: '',
             LOWERVALUE: '',
             displayColorPicker: true,
-           color:'',
+            color: '',
         }
     }
+
+
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             title: nextProps.title,
             msg: nextProps.msg,
+
         });
     }
+////////............this is for automatic colour pic........///
+//  componentToHex(c) {
+//   let hex = c.toString(16);
+//   return hex.length == 1 ? "0" + hex : hex;
+// }
+//  rgbToHex(r, g, b,a) {
+//   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+// }
+// if(color)
+// {
+// var r =color.r
+// var g =color.g
+// var b =color.b
+// var a =color.a
+// var color = rgbToHex(r,g,b,a)
+// console.log(color)
+
+
+// this.setState({
+//   color:color
+// })
+// }
+
+
+
     handleClick = () => {
 
         this.setState({ displayColorPicker: !this.state.displayColorPicker })
@@ -105,7 +133,7 @@ Modal extends Component {
                             </button>
                         </div>
                         <div className="modal-body">
-                          <p>{this.props.POINTNAME}</p>
+                          <p>Tag Name: {this.props.POINTNAME}</p>
                             <p><span className="modal-lable">High Limit:</span><input value={this.state.UPPERVALUE} onChange={(e) => this.titleHandler(e)} /></p>
                             <p><span className="modal-lable">Low Limit:</span><input value={this.state.LOWERVALUE} onChange={(e) => this.msgHandler(e)} /></p>
                             <p>Please choose the color</p>

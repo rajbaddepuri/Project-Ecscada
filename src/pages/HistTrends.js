@@ -247,7 +247,8 @@ this.setState({currentGroup:value},async()=>{
   console.log(api);
   axios.get(api)  
   .then( async res => {  
-       this.setState({chart: res.data},async()=>{
+      // this.setState(async()=>{
+        this.setState({chart: res.data},async()=>{
          console.log(this.state.chart.length)
          var labelMap = await this.state.chart.map((data,i)=>{
            console.log(data.PENCOLOR)
@@ -332,7 +333,9 @@ if (this.state.endDate == null ){
 
 }
 //........end date should be less than start date.........////
-if (this.state.startDate > this.state.endDate ){
+console.log(this.state.endDate)
+if (this.state.startDate > this.state.endDate){
+  
   validDate = true
 }
 
@@ -1158,61 +1161,13 @@ changeHandlerEnd = (e) =>{
                                    </tr>
 ))} 
                                         </tbody>
-                                 {/* <tbody>
-                                   {this.state.chart.map((chart,i) => (
-                                            <tr className="">
-                                            <td className="hidden-xs" style={{color:"green"}}>
-                                            
-                                            
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={chart}>{chart.POINTNAME}</ul>
-                                    
-                                           
-                                            
-                                               
-                                            </td>
-                                            <td className="hidden-xs" style={{color:"green"}}>
-                                            
-                                        
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={chart}>{chart.UPPERVALUE}</ul>
-                                            
-                                           
-                                            
-                                            </td>
-                                            <td className="text-center width40" style={{color:"green"}}>
-                                             
-                                            
-                                                
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={chart}>{chart.LOWERVALUE}</ul>
-                                        
-                                               
-                                                  
-                                                
-                                            </td>
-                                            <td class="hidden-xs" style={{color:"green"}}>                                               
-                                    
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={chart}>{chart.fvalue}</ul>
-                                          
-                                            </td> 
-
-                                            <td class="hidden-xs" style={{color:"green"}}>                                               
-                                            
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={chart}>{chart.PENCOLOR}</ul>
-                                          
-                                            </td>
-                                            
-                                            <td style={{textAlign:"center", marginLeft:"0"}} key={chart}><button className="btn btn-primary" data-toggle="modal" data-target="#myModal" style={{backgroundColor:"#337ab7",width:"50px"}} onClick={() => this.replaceModalItem(i)} >Edit</button> </td>
-                                            
-                           
-                                            
-                                        </tr>
-                                        ))}
-                                        </tbody> */}
+                                
                                 </table>
                                 <Modal 
                                         UPPERVALUE= "0"
                                         LOWERVALUE= "0"
                                         color={this.state?.chart[this.state.requiredItem]?.color}
-                                      COLOR = {this.converAndroidColortoRGB("color")}
+                                        COLOR = {this.converAndroidColortoRGB("color")}
                                         POINTNAME = {this.state?.chart[this.state.requiredItem]?.POINTNAME}
                                         saveModalDetails={this.saveModalDetails}
                                 />

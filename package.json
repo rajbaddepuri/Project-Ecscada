@@ -17,6 +17,7 @@
     "canvasjs-react-charts": "^1.0.5",
     "chart.js": "^2.9.4",
     "chartjs-plugin-zoom": "^0.7.7",
+    "hex-rgb": "^5.0.0",
     "highcharts": "^9.0.1",
     "highcharts-react-official": "^3.0.0",
     "konva": "^7.2.2",

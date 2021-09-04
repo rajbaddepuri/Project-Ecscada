@@ -45,9 +45,11 @@ import datepicker from './pages/datepicker';
 import DTms_0010 from './pages/DTms_0010'; 
 import AlarmsEvents from './pages/AlarmsEvents'; 
 import FileUpload from './pages/FileUpload'; 
+import Modal from './pages/Modal'
 // import LineChartDemo from './pages/LineChartDemo'; 
 import {BrowserRouter as Router ,Route,Switch} from 'react-router-dom';
-import Report from "./pages/Report"
+import Report from "./pages/Report";
+import SketchExample from './pages/sketch';
 
 
 
@@ -140,6 +142,8 @@ class App extends React.Component {
       <Route exact path="/FileUpload" component={FileUpload}/>
       <Route exact path="/HistTrends" component={HistTrends}/>
       <Route exact path="/Reports" component={Report}/>
+      <Route exact path="/Modal" component={Modal}/>
+      <Route exact path="/SketchExample" component={SketchExample}/>
 
 
   
