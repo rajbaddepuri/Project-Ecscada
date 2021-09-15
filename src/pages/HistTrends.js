@@ -109,6 +109,7 @@ onHoverMethod(event, array) {
 
 
 componentDidMount() {
+  
     axios.get('http://localhost/ScadaClient/api/GroupName?GroupName=').then(res => {
         console.log(res);
         //this.setState({ name: res.data });
@@ -242,8 +243,10 @@ var  value = e.target.value ;
 console.log(value);
 console.log("Calling Groups API")
 this.setState({currentGroup:value},async()=>{
+  alert("entered into")
 
-  var api = 'http://localhost/ScadaClient/api/GroupwithTrendsTimestamp?GroupName='+this.state.currentGroup;
+  var api = 'http://183.82.4.93:5887/ECScadaTrends/api/groupname?groupname=DAS_GRP2';
+  
   console.log(api);
   axios.get(api)  
   .then( async res => {  
@@ -417,14 +420,15 @@ if (validDateRange){
 /////'..............ADDING THE CONDITION.........///////////////////
 
   if (!validGropuname && !validStartdate && !validEnddate && !validDate && !validDateRange) {
-    alert("ok")
+   
   
     var temp =  [];
     const val = [];
   let i=0;
   let urllist=[]
   
-  for(i;i< this.state.chart.length;i++){
+  
+    alert("ok")
    // http://localhost/ScadaClient/api/HistoricTrendsData?PointName=TI_1203&FromDate=2021-03-09T14:26:30&ToDate=2021-03-09T14:28:30
 
    // var api = "http://localhost/ScadaClient/api/HistoricTrendsData?PointName="+this.state.chart[i].POINTNAME+"&FromDate="+startdate+"&ToDate="+enddate;
@@ -432,7 +436,7 @@ if (validDateRange){
     //var api = "http://localhost/ScadaClient/api/FileRead?PointName="+this.state.chart[i].POINTNAME+"&FromDt="+startdate+"&ToDt="+enddate;
    
   // var api = "http://localhost/ScadaClient/api/FileRead?PointName=DAS_GRP2&FromDt="+startdate+"&ToDt="+enddate;
-    var api = " http://localhost/ScadaClient/api/HistoricTrendsData?PointName="+this.state.chart[i].POINTNAME+"&FromDate=2021-03-09T14:26:30&ToDate=2021-03-09T14:28:30";
+    var api = " http://183.82.4.93:5887/ECScadaTrends/api/groupname?groupname=DAS_GRP2";
        console.log(api)
       const response =  await axios.get(api)
       console.log("response----------")
@@ -440,7 +444,7 @@ if (validDateRange){
 
      temp.push(response.data)
      console.log(temp.length)
-    }
+    
      this.setState({histS:temp},()=>{
       console.log(temp)
       console.log(this.state.histS)
@@ -835,7 +839,7 @@ changeHandlerEnd = (e) =>{
                                     <select name="currentGroup" 
                                         className="form-control"  value={this.state.currentGroup} onChange={this.change}>
                                     <option value=""></option>
-                                    <option value="DAS_GRP2">DAS_GRP2</option>
+                                    <option value="DAS_GRP2" onClick={this.handleSelectedGroupDropDOwn}>DAS_GRP2</option>
                                     <option value="sample">sample</option>
 
                                     </select>

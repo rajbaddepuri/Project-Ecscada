@@ -23,7 +23,7 @@ import ProcessFlowmodel from './pages/ProcessFlowmodel';
 import Trends from './pages/Trends';
 import TabularTrends from './pages/TabularTrends';
 import LineTrends from './pages/LineTrends';
-import LineGraph from './pages/LineGraph';
+//import LineGraph from './pages/LineGraph';
 import Historictrends from './pages/HistoricTrends'
 import BarTrends from './pages/BarTrends';
 import AreaTrends from './pages/AreaTrends';
@@ -50,6 +50,8 @@ import Modal from './pages/Modal'
 import {BrowserRouter as Router ,Route,Switch} from 'react-router-dom';
 import Report from "./pages/Report";
 import SketchExample from './pages/sketch';
+import Example from './pages/extrends'
+import Graph from './pages/graph'
 
 
 
@@ -123,7 +125,7 @@ class App extends React.Component {
       <Route exact path="/Trends" component={Trends}/>
       <Route exact path="/TabularTrends" component={TabularTrends}/>
       <Route exact path="/LineTrends" component={LineTrends}/>
-      <Route exact path="/LineGraph" component={LineGraph}/>
+      {/* <Route exact path="/LineGraph" component={LineGraph}/> */}
       <Route exact path="/Historictrends" component={Historictrends}/>
       <Route exact path="/BarTrends" component={BarTrends}/> 
       <Route exact path="/AreaTrends" component={AreaTrends}/>
@@ -144,12 +146,11 @@ class App extends React.Component {
       <Route exact path="/Reports" component={Report}/>
       <Route exact path="/Modal" component={Modal}/>
       <Route exact path="/SketchExample" component={SketchExample}/>
+      <Route exact path="/Example" component={Example}/>
+      <Route exact path="/graph" component={Graph}/>
 
 
-  
-    
 
-    
      
         </Switch>
          
