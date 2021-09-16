@@ -1,9 +1,10 @@
 import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
-import DatePicker from "react-datepicker";    
+ 
 import "react-datepicker/dist/react-datepicker.css"; 
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker'
 import {FormControl} from 'react-bootstrap'
+import DatePicker from "react-datepicker";   
 import moment from "moment"
 import axios from 'axios'
 import { Input } from "semantic-ui-react";
@@ -93,180 +94,316 @@ globalSearch = () => {
   };
  
     render(){
-    return(
-        <body >
+    return (
+      <body>
+        <div>
+          <div className="page">
+            <div>
+              <ul class="nav nav-tabs page-header-tab">
+                <li class="nav-item">
+                  <Link
+                    to="/ViewAlarms"
+                    class="nav-link inactive show"
+                    data-toggle="tab"
+                    href="#Area_Charts"
+                  >
+                    View Alarms
+                  </Link>
+                </li>
 
-<div >
-
-    <div className="page">
-    
-                <div>
-            
-                        <ul class="nav nav-tabs page-header-tab">
-                            <li class="nav-item"><Link to="/ViewAlarms" class="nav-link inactive show" data-toggle="tab" href="#Area_Charts">View Alarms</Link></li>
-
-                            <li class="nav-item"><Link to="/HistoricAlarms" class="nav-link active show" data-toggle="tab" href="#Email_Settings">Historic Alarms</Link></li>
-                        
-                        </ul>
-                                {/* <h3 className="card-title">Alarms</h3> */}
-                                {/* <div className="card-options">
+                <li class="nav-item">
+                  <Link
+                    to="/HistoricAlarms"
+                    class="nav-link active show"
+                    data-toggle="tab"
+                    href="#Email_Settings"
+                  >
+                    Historic Alarms
+                  </Link>
+                </li>
+              </ul>
+              {/* <h3 className="card-title">Alarms</h3> */}
+              {/* <div className="card-options">
                                     <button className="btn btn-sm btn-outline-secondary mr-1" id="one_month">1M</button>
                                     <button className="btn btn-sm btn-outline-secondary mr-1" id="six_months">6M</button>
                                     <button className="btn btn-sm btn-outline-secondary mr-1" id="one_year" class="active">1Y</button>
                                     <button className="btn btn-sm btn-outline-secondary mr-1" id="ytd">YTD</button>
                                     <button className="btn btn-sm btn-outline-secondary" id="all">ALL</button>
                                 </div> */}
-                         </div>
-                         
+            </div>
 
-              
-            <div >
-        
-        <div className="row clearfix">
-            <div className="col-xl-12 col-lg-12">
-            <div className="row">  
-            </div>  
-            <form onSubmit={this.submitHandler} >
+            <div>
+              <div className="row clearfix">
+                <div className="col-xl-12 col-lg-12">
+                  <div className="row"></div>
+                  <form onSubmit={this.submitHandler}>
+                    <div class="row">
+                      <div className="col-md-3 col-sm-12">
+                        Start Date:{" "}
+                        <DatePicker
+                          wrapperClassName="datepicker"
+                          className="form-control"
+                          autoComplete="off"
+                          selected={this.state.startDate}
+                          onChange={this.handleChange}
+                          name="startDate"
+                          dateFormat="MM/dd/yyyy"
+                        />
+                      </div>
+                      <div className="col-md-3 col-sm-12">
+                        End Date:{" "}
+                        <DatePicker
+                          wrapperClassName="datepicker"
+                          className="form-control"
+                          autoComplete="off"
+                          selected={this.state.EndDate}
+                          onChange={this.handleChange1}
+                          name="EndDate"
+                          dateFormat="MM/dd/yyyy"
+                        />
+                      </div>
+                      <button
+                        className="btn btn-primary"
+                        type="submit"
+                        style={{ background: "blue" }}
+                      >
+                        Search
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <br />
             <div class="row">
-                                                    <div className="col-md-3 col-sm-12" >  
-                                                Start Date:    <DatePicker
-                                            wrapperClassName="datepicker"
-                                            className="form-control"
-                                            autoComplete="off"
-                                            selected={this.state.startDate}
-                                            onChange={this.handleChange}
-                                            name="startDate"
-                                            dateFormat="MM/dd/yyyy"
-                                        />  
-                                                    </div>  
-                                                    <div className="col-md-3 col-sm-12" >  
-                                                End Date:   <DatePicker
-                                            wrapperClassName="datepicker"
-                                            className="form-control"
-                                            autoComplete="off"
-                                            selected={this.state.EndDate}
-                                            onChange={this.handleChange1}
-                                            name="EndDate"
-                                            dateFormat="MM/dd/yyyy"
-                                        />  
-                                                    </div>
-                                                    <button className="btn btn-primary" type="submit" style={{ background: "blue" }}>Search</button>
-
-                     </div>    
-                    
-
-                                                        </form>
-                                                     </div>
+              <div className="col-md-3 col-sm-12" style={{}}>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search for..."
+                  name="searchInput"
+                  value={this.state.searchInput || ""}
+                  onChange={this.handleChange2}
+                />
+                <span className="input-icon-addon">
+                  <i className="fe fe-search"></i>
+                </span>
+              </div>
             </div>
-            </div>
-            
-<br/>
-<div class="row">
-        <div className="col-md-3 col-sm-12" style={{}}>  
-        <input type="text" className="form-control" placeholder="Search for..."  name="searchInput"
-          value={this.state.searchInput || ""}
-          onChange={this.handleChange2}/>
-                        <span className="input-icon-addon"><i className="fe fe-search"></i></span>
-        
-       </div>
-       
-       
+            <br />
 
-       
-       
-        </div>
-        <br />
-        
-
-
-           
-            
             <div className="tab-content">
-                <div className="tab-pane fade show active" id="list" role="tabpanel">
-                    <div className="row clearfix">
-                        <div className="col-lg-12">
-                            <div className="table-responsive" id="users" style={{marginTop:"-20px"}}>
-                                <table className="table table-hover table-vcenter text-nowrap table_custom border-style list"> 
-                                    <table className="table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap">
-                                    <thead style={{textAlign:"-webkit-center", backgroundColor:"#252d42"}}>
-                                        <tr>
-                                            <th style={{textTransform:"none", color:"#E5E5E5"}}>Date</th>
-                                            <th style={{textTransform:"none", color:"#E5E5E5"}}>Time</th>
-                                            <th style={{textTransform:"none", color:"#E5E5E5"}}>Device Name</th>
-                                            <th style={{textTransform:"none", color:"#E5E5E5"}}>Tag Name</th>
-                                            <th style={{textTransform:"none", color:"#E5E5E5"}}>Description</th>
-                                            <th style={{textTransform:"none", color:"#E5E5E5"}}>Alm Value</th>
-                                        </tr>
-                                    </thead>
-                                   <tbody>
-                                        
-                                            <tr style={{backgroundColor:"#252d42"}}>
-                                            <td className="hidden-xs" style={{ color: "white" }}>
-                                            
-                                             {this.state.historicAlarms.map(historicAlarms => (
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={historicAlarms}>{historicAlarms.DESCRIPTION.substring(9,20)}</ul>
-                                            ))}
-                                           
-                                            
-                                               {/*  <!--<a href="javascript:void(0);" class="mail-star love"><i class="fa fa-heart"></i> --> */}
-                                            </td>
-                                            <td className="text-center width40" style={{ color: "white" }}>
-                                                {/* <!--<div class="avatar d-block">--> */}
-                                            
-                                                {this.state.historicAlarms.map(historicAlarms => (
-                                                <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={historicAlarms}>{historicAlarms.DESCRIPTION.substring(0,8)}</ul>
-                                                ))}
-                                               
-                                                   {/* <!-- <img class="avatar" src="../assets/images/xs/avatar3.jpg" alt="avatar"> --> */}
-                                                
-                                            </td>
-                                            <td style={{ color: "white" }}>                                               
-                                            {this.state.historicAlarms.map(historicAlarms => (
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={historicAlarms}>{historicAlarms.DEVICENAME}</ul>
-                                            ))}
-                                            </td> 
-                                          
-                                            
-                                            <td className="hidden-xs" style={{ color: "white" }}>
-                                              {/*  <!-- <div class="text-muted">maryadams@info.com</div>--> */}
-                                            
-                                            {this.state.historicAlarms.map(historicAlarms => (
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={historicAlarms}>{historicAlarms.POINTNAME}</ul>
-                                            ))}
-       
-                                            </td>
-                                            
-                                                                    <td className="hidden-xs" style={{ color: "white" }}>
-                                              {/*  <!-- <div class="text-muted">maryadams@info.com</div>--> */}
-                                              
-                                            {this.state.historicAlarms.map(historicAlarms => (
-                                            <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={historicAlarms}>{historicAlarms.DESCRIPTION.substring(33,77)}</ul>
-                                            ))}
-       
-                                            </td>
-                                            <td class="hidden-xs" style={{ color: "white" }}>
-                                              {/*  <!-- <div class="text-muted">maryadams@info.com</div>--> */}
-                                              {this.state.historicAlarms.map(historicAlarms => (
-                                                <ul style={{textAlign:"-webkit-center", marginLeft:"-40px"}} key={historicAlarms}>{historicAlarms.VALUE}</ul> 
-                                            ))}                  
-                                            </td>
-                                            
-                                        </tr>
-                                        </tbody>
-                                </table>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
-                </div>
-       
-                    </div>
-                    
-</body>
+              <div
+                className="tab-pane fade show active"
+                id="list"
+                role="tabpanel"
+              >
+                <div className="row clearfix">
+                  <div className="col-lg-12">
+                    <div
+                      className="table-responsive"
+                      id="users"
+                      style={{ marginTop: "-20px" }}
+                    >
+                      <table className="table table-hover table-vcenter text-nowrap table_custom border-style list">
+                        <table className="table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap">
+                          <thead
+                            style={{
+                              textAlign: "-webkit-center",
+                              backgroundColor: "#252d42",
+                            }}
+                          >
+                            <tr>
+                              <th
+                                style={{
+                                  textTransform: "none",
+                                  color: "#E5E5E5",
+                                }}
+                              >
+                                Date
+                              </th>
+                              <th
+                                style={{
+                                  textTransform: "none",
+                                  color: "#E5E5E5",
+                                }}
+                              >
+                                Time
+                              </th>
+                              <th
+                                style={{
+                                  textTransform: "none",
+                                  color: "#E5E5E5",
+                                }}
+                              >
+                                Device Name
+                              </th>
+                              <th
+                                style={{
+                                  textTransform: "none",
+                                  color: "#E5E5E5",
+                                }}
+                              >
+                                Tag Name
+                              </th>
+                              <th
+                                style={{
+                                  textTransform: "none",
+                                  color: "#E5E5E5",
+                                }}
+                              >
+                                Description
+                              </th>
+                              <th
+                                style={{
+                                  textTransform: "none",
+                                  color: "#E5E5E5",
+                                }}
+                              >
+                                Alm Value
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr style={{ backgroundColor: "#252d42" }}>
+                              <td
+                                className="hidden-xs"
+                                style={{ color: "white" }}
+                              >
+                                {this.state.historicAlarms.map(
+                                  (historicAlarms) => (
+                                    <ul
+                                      style={{
+                                        textAlign: "-webkit-center",
+                                        marginLeft: "-40px",
+                                      }}
+                                      key={historicAlarms}
+                                    >
+                                      {historicAlarms.DESCRIPTION.substring(
+                                        9,
+                                        20
+                                      )}
+                                    </ul>
+                                  )
+                                )}
 
-    )
+                                {/*  <!--<a href="javascript:void(0);" class="mail-star love"><i class="fa fa-heart"></i> --> */}
+                              </td>
+                              <td
+                                className="text-center width40"
+                                style={{ color: "white" }}
+                              >
+                                {/* <!--<div class="avatar d-block">--> */}
+
+                                {this.state.historicAlarms.map(
+                                  (historicAlarms) => (
+                                    <ul
+                                      style={{
+                                        textAlign: "-webkit-center",
+                                        marginLeft: "-40px",
+                                      }}
+                                      key={historicAlarms}
+                                    >
+                                      {historicAlarms.DESCRIPTION.substring(
+                                        0,
+                                        8
+                                      )}
+                                    </ul>
+                                  )
+                                )}
+
+                                {/* <!-- <img class="avatar" src="../assets/images/xs/avatar3.jpg" alt="avatar"> --> */}
+                              </td>
+                              <td style={{ color: "white" }}>
+                                {this.state.historicAlarms.map(
+                                  (historicAlarms) => (
+                                    <ul
+                                      style={{
+                                        textAlign: "-webkit-center",
+                                        marginLeft: "-40px",
+                                      }}
+                                      key={historicAlarms}
+                                    >
+                                      {historicAlarms.DEVICENAME}
+                                    </ul>
+                                  )
+                                )}
+                              </td>
+
+                              <td
+                                className="hidden-xs"
+                                style={{ color: "white" }}
+                              >
+                                {/*  <!-- <div class="text-muted">maryadams@info.com</div>--> */}
+
+                                {this.state.historicAlarms.map(
+                                  (historicAlarms) => (
+                                    <ul
+                                      style={{
+                                        textAlign: "-webkit-center",
+                                        marginLeft: "-40px",
+                                      }}
+                                      key={historicAlarms}
+                                    >
+                                      {historicAlarms.POINTNAME}
+                                    </ul>
+                                  )
+                                )}
+                              </td>
+
+                              <td
+                                className="hidden-xs"
+                                style={{ color: "white" }}
+                              >
+                                {/*  <!-- <div class="text-muted">maryadams@info.com</div>--> */}
+
+                                {this.state.historicAlarms.map(
+                                  (historicAlarms) => (
+                                    <ul
+                                      style={{
+                                        textAlign: "-webkit-center",
+                                        marginLeft: "-40px",
+                                      }}
+                                      key={historicAlarms}
+                                    >
+                                      {historicAlarms.DESCRIPTION.substring(
+                                        33,
+                                        77
+                                      )}
+                                    </ul>
+                                  )
+                                )}
+                              </td>
+                              <td class="hidden-xs" style={{ color: "white" }}>
+                                {/*  <!-- <div class="text-muted">maryadams@info.com</div>--> */}
+                                {this.state.historicAlarms.map(
+                                  (historicAlarms) => (
+                                    <ul
+                                      style={{
+                                        textAlign: "-webkit-center",
+                                        marginLeft: "-40px",
+                                      }}
+                                      key={historicAlarms}
+                                    >
+                                      {historicAlarms.VALUE}
+                                    </ul>
+                                  )
+                                )}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    );
 }
 }
 export default HistoricAlarms;
