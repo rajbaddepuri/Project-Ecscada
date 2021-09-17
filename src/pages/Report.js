@@ -23,7 +23,7 @@ import moment from "moment"
       e.preventDefault(); 
 
           function importAll(r) {
-            console.log(r)
+           
            return r.keys().map(r);
           }
   
@@ -32,12 +32,20 @@ import moment from "moment"
           let startDate = moment(this.state.startDate).format('DD-MM-YYYY');
           console.log(startDate)
           console.log(this.state.Status)
+
           //D:\Unical\shift\shift_14-09-2021
-          var status = this.state.Status
-          var path ='D:/Unical/'+this.state.Status+'/'+this.state.Status+'_'+startDate
-          //console.log(path)
-          //`./utils/${variableName}`
-          var Pdf = importAll(require.context('D:/Unical/shift/shift_14-09-2021', true, ));
+
+        
+          var testPath ='D:/Unical/'+this.state.Status+'/'+this.state.Status+'_'+startDate
+          
+         
+          var  Pdf  = importAll(require.context(testPath, false));
+          
+          //'D:/Unical/shift/shift_14-09-2021'
+
+
+         // var Pdf = importAll(require.context('D:/Unical/shift/shift_14-09-2021',false));
+          
           var Array = [];
           Pdf.map((a)=>Array.push(a.default))
           console.log(Array)
@@ -111,8 +119,17 @@ globalSearch = () => {
                   <div className="row"></div>
                   <form onSubmit={this.submitHandler}>
                     <div class="row">
-                      <div className="col-md-3 col-sm-12">
-                        Please Choose The Date:
+                    <div class="col-sm-4 col-md-4">
+                                <div class="form-group" style={{}}>
+                                <label>Shift<input type="radio" value={"shift"} name="Status" onChange={this.changeHandler} style={{ marginLeft: "80px" }} /> </label>
+                                        <br />
+                                        <label>Dialy<input type="radio" value={"dialy"} name="Status" onChange={this.changeHandler} style={{ marginLeft: "77px" }} /> </label>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                                <div class="form-group" style={{}}>
+                                Please Choose The Date:
                         <DatePicker
                           wrapperClassName="datepicker"
                           className="form-control"
@@ -123,20 +140,10 @@ globalSearch = () => {
                           maxDate={new Date()}
                           dateFormat="MM/dd/yyyy"
                         />
-                      </div>
-                      <div class="col-sm-4 col-md-4">
-                                <div class="form-group" style={{}}>
-                                    <div  style={{ color: "black" }}>
-                                        
-                                        {/* <input type="text" name="Gender" value={this.state.add.Gender} onChange={this.changeHandler}/> */}
-                                        <label>Shift<input type="radio" value={"shift"} name="Status" onChange={this.changeHandler} style={{ marginLeft: "80px" }} /> </label>
-                                        <br />
-                                        <label>Dialy<input type="radio" value={"dialy"} name="Status" onChange={this.changeHandler} style={{ marginLeft: "77px" }} /> </label>
-
-                                    </div>
                                 </div>
                             </div>
-                     
+                      
+                      
                       <button
                         className="btn btn-primary"
                         type="submit"

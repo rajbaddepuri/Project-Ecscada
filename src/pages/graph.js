@@ -1,9 +1,13 @@
 import React from "react";
-
+import axios from "axios";
+import { Link } from "react-router-dom";
+//import EditUser from "./EditUser";
+import { Redirect } from "react-router-dom";
+import { Progress } from "reactstrap";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import ChartSpace from './ChartSpace';
-
+//import SidebarClass from "./SideBar";
+import ChartSpace from "./ChartSpace";
 
 class Graph extends React.Component {
   constructor(props) {
@@ -33,5 +37,3 @@ class Graph extends React.Component {
 }
 
 export default Graph;
-
-
